@@ -161,6 +161,7 @@ def setup_clickhouse_schema():
             created_at DateTime
         ) ENGINE = ReplacingMergeTree()
         ORDER BY id
+        SETTINGS index_granularity = 1024
         """
         
         client.command(create_table_sql)

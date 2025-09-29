@@ -127,8 +127,8 @@ class DataGenerator:
             string_value_1=cls.random_string(20),
             string_value_2=cls.random_string(15),
             string_value_3=cls.random_string(25),
-            string_value_4=cls.random_string(30),
-            string_value_5=cls.random_string(12),
+            string_value_4=cls.random_string(32),
+            string_value_5=cls.random_string(64),
             int64_1=cls.random_int64(),
             int64_2=cls.random_int64(),
             int64_3=cls.random_int64(),
@@ -139,7 +139,7 @@ class DataGenerator:
             dbl_3=cls.random_double(),
             dbl_4=cls.random_double(),
             dbl_5=cls.random_double(),
-            details=cls.random_string(100),
+            details=cls.random_string(1024),
             created_at=datetime.now()
         )
     
@@ -196,6 +196,7 @@ class ClickHouseStorage:
             created_at DateTime
         ) ENGINE = ReplacingMergeTree()
         ORDER BY id
+        SETTINGS index_granularity = 1024
         """
         self.client.command(create_table_sql)
     
@@ -817,6 +818,8 @@ def main():
         print(f"\nRunning benchmark with configuration:")
         print(f"  Single inserts: {config.single_insert_count:,} records")
         print(f"  Batch inserts: {config.batch_insert_count:,} records (batch size: {config.batch_size})")
+        print(f"  Single updates: {config.single_insert_count:,} records")
+        print(f"  Batch updates: {config.batch_insert_count:,} records (batch size: {config.batch_size})")
         print(f"  Read tests: {config.read_test_count:,} records")
         print(f"  Concurrent tests: {config.concurrent_test_count:,} records ({config.concurrent_workers} workers)")
         print()
